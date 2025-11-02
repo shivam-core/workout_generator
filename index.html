@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💪 Workout Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏋️ WORKOUT GENERATOR 🏋️</h1>
+            <p class="tagline">Your Personal Fitness Coach</p>
+        </header>
+
+        <div class="card">
+            <h2>📋 Enter Your Details</h2>
+            <form id="workoutForm">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" required placeholder="Enter your name">
+                </div>
+
+                <div class="form-group">
+                    <label for="age_range">Age Range</label>
+                    <select id="age_range" name="age_range" required>
+                        <option value="Under 18">Under 18</option>
+                        <option value="18-30" selected>18-30</option>
+                        <option value="30-50">30-50</option>
+                        <option value="Above 50">Above 50</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select id="gender" name="gender" required>
+                        <option value="Male" selected>Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="height">Height (cm)</label>
+                        <input type="number" id="height" name="height" required placeholder="170" min="50" max="250">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="weight">Weight (kg)</label>
+                        <input type="number" id="weight" name="weight" required placeholder="70" min="20" max="300">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="fitness_level">Fitness Level</label>
+                    <select id="fitness_level" name="fitness_level" required>
+                        <option value="Beginner" selected>Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Advanced">Advanced</option>
+                    </select>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary">🔥 Generate Workout Plan</button>
+                    <button type="button" class="btn btn-secondary" onclick="clearForm()">🗑️ Clear</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="output" class="output" style="display: none;">
+            <div class="card">
+                <h2>📊 Your Personalized Workout Plan</h2>
+                <div id="workoutPlan"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('workoutForm');
+        const output = document.getElementById('output');
+        const workoutPlan = document.getElementById('workoutPlan');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('name').value,
+                age_range: document.getElementById('age_range').value,
+                gender: document.getElementById('gender').value,
+                height: parseFloat(document.getElementById('height').value),
+                weight: parseFloat(document.getElementById('weight').value),
+                fitness_level: document.getElementById('fitness_level').value
+            };
+
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    displayWorkout(data);
+                } else {
+                    alert(data.error || 'An error occurred');
+                }
+            } catch (error) {
+                alert('Failed to generate workout plan. Please try again.');
+            }
+        });
+
+        function displayWorkout(plan) {
+            const profile = plan.profile;
+            let html = `
+                <div class="profile-section">
+                    <h3>🎯 Fitness Profile: ${profile.name.toUpperCase()}</h3>
+                    <div class="profile-details">
+                        <p><strong>Age Range:</strong> ${profile.age_range}</p>
+                        <p><strong>Gender:</strong> ${profile.gender}</p>
+                        <p><strong>BMI:</strong> ${profile.bmi} (${profile.category})</p>
+                        <p><strong>Fitness Level:</strong> ${profile.fitness_level}</p>
+                    </div>
+                    <div class="motivation">${plan.motivation}</div>
+                </div>
+
+                <div class="workout-section">
+                    <h3>🔥 WARM-UP (5-8 minutes)</h3>
+                    <ul>
+                        ${plan.warmup.map((ex, i) => `<li>${i + 1}. ${ex} - 1 minute</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="workout-section">
+                    <h3>💨 CARDIO (15-20 minutes)</h3>
+                    <ul>
+                        ${plan.cardio.exercises.map((ex, i) => `<li>${i + 1}. ${ex} - ${plan.cardio.duration}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="workout-section">
+                    <h3>💪 STRENGTH TRAINING (20-25 minutes)</h3>
+                    <ul>
+                        ${plan.strength.exercises.map((ex, i) => `<li>${i + 1}. ${ex} - 3 sets of ${plan.strength.reps}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="workout-section">
+                    <h3>🧘 FLEXIBILITY & STRETCHING (5-10 minutes)</h3>
+                    <ul>
+                        ${plan.flexibility.map((ex, i) => `<li>${i + 1}. ${ex} - Hold for 30 seconds</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="workout-section">
+                    <h3>😌 COOL-DOWN (5 minutes)</h3>
+                    <ul>
+                        ${plan.cooldown.map((ex, i) => `<li>${i + 1}. ${ex} - 2-3 minutes</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="tips">
+                    <h3>💡 Pro Tips</h3>
+                    <ul>
+                        <li>💧 Stay hydrated - drink water before, during, and after your workout</li>
+                        <li>🎯 Listen to your body - rest when needed</li>
+                        <li>🌈 Consistency is key - keep showing up!</li>
+                        <li>📈 Track your progress and celebrate small wins</li>
+                    </ul>
+                </div>
+            `;
+
+            workoutPlan.innerHTML = html;
+            output.style.display = 'block';
+            output.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function clearForm() {
+            form.reset();
+            output.style.display = 'none';
+            workoutPlan.innerHTML = '';
+        }
+    </script>
+</body>
+</html>
