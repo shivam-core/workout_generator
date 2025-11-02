@@ -1,4 +1,4 @@
-# Workout Generator - Web Application
+# Workout Generator - Python Web Application
 
 ## Overview
 A personalized fitness plan creator with a modern web interface built using Python, HTML, CSS, and JavaScript. This application generates customized workout routines based on user fitness profiles including BMI calculations, age, fitness level, and physical metrics.
@@ -11,7 +11,7 @@ A personalized fitness plan creator with a modern web interface built using Pyth
 - Demonstrate full-stack web development with Python Flask
 
 ## Current State
-- ✅ Flask web application with REST API backend
+- ✅ Web application Python backend
 - ✅ Modern, responsive HTML/CSS frontend
 - ✅ BMI calculation and categorization
 - ✅ Randomized exercise selection from categorized pools
