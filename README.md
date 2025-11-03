@@ -17,7 +17,7 @@ A personalized fitness plan creator with a modern web interface built using Pyth
 - ✅ Randomized exercise selection from categorized pools
 - ✅ Structured workout plans (warm-up, cardio, strength, flexibility, cool-down)
 - ✅ Motivational coaching messages
-- ✅ Deployment-ready configuration for Replit
+- ✅ Deployment-ready configuration for Deployment
 - ✅ Running on port 5000 for web deployment
 
 ## Recent Changes
@@ -27,13 +27,13 @@ A personalized fitness plan creator with a modern web interface built using Pyth
   - Added modern styling with gradient design (static/css/style.css)
   - Configured workflow to run on port 5000
   - Set up autoscale deployment configuration
-  - Maintained all workout generation logic from original version
+  - Maintained all workout generation logic from the original version
   - Added smooth animations and better UX
 
 ## Project Architecture
 ```
 .
-├── app.py                    # Flask backend with workout generation API
+├── app.py                    # Python backend with workout generation
 ├── templates/
 │   └── index.html           # Main web interface
 ├── static/
@@ -41,7 +41,7 @@ A personalized fitness plan creator with a modern web interface built using Pyth
 │       └── style.css        # Styling and responsive design
 ├── main.py                  # Original Tkinter version (archived)
 ├── .gitignore              # Python gitignore patterns
-└── replit.md               # Project documentation
+└── README.md               # Project documentation
 ```
 
 ## Technical Stack
@@ -75,28 +75,6 @@ A personalized fitness plan creator with a modern web interface built using Pyth
    - Generate and Clear functionality
    - Professional color scheme
 
-## How to Run (Development)
-```bash
-python app.py
-```
-The app will be available at http://localhost:5000
-
-## Deployment
-This application is configured for Replit Autoscale deployment:
-- **Deployment Type**: Autoscale (stateless web application)
-- **Port**: 5000
-- **Run Command**: `python app.py`
-
-To deploy:
-1. Click the "Deploy" button in Replit
-2. The app will be published with a public URL
-3. Share the URL with users
-
-## API Endpoints
-- `GET /` - Main web interface
-- `POST /generate` - Generate workout plan (JSON API)
-  - Request body: `{name, age_range, gender, height, weight, fitness_level}`
-  - Response: Personalized workout plan JSON
 
 ## Code Structure
 - Flask backend with WorkoutGenerator class
@@ -104,10 +82,3 @@ To deploy:
 - RESTful API for workout generation
 - Modern, responsive frontend with vanilla JavaScript
 - Clean separation of concerns (backend/frontend)
-
-## User Preferences
-None specified yet.
-
-## Version History
-- **v2.0** (2025-11-02): Web application with Flask backend
-- **v1.0** (2025-11-02): Original Tkinter desktop application
